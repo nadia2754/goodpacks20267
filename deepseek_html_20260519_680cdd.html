@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Paradise Doors · Exclusive Gallery</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0a0a0a;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+      color: #fff;
+    }
+
+    /* ========== TOP NAVIGATION BAR ========== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #c084fc, #60a5fa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.85rem;
+      color: #aaa;
+      font-weight: 500;
+    }
+    .nav-links span {
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .nav-links span:hover {
+      color: #c084fc;
+    }
+
+    /* ========== HERO SECTION ========== */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      background: linear-gradient(180deg, #1a0b2e 0%, #0a0a0a 100%);
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(to right, #e9d5ff, #93c5fd, #fca5a5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .hero p {
+      color: #94a3b8;
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-block;
+      margin-top: 1rem;
+      background: linear-gradient(135deg, #7e22ce, #2563eb);
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* ========== FILTER TAGS ========== */
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .filter-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .filter-tag.active,
+    .filter-tag:hover {
+      background: linear-gradient(135deg, #7e22ce, #4f46e5);
+      border-color: transparent;
+      color: white;
+    }
+
+    /* ========== MAIN GALLERY GRID ========== */
+    .gallery-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem 2rem;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    /* ========== PRODUCT CARD ========== */
+    .gallery-card {
+      background: rgba(20, 15, 30, 0.8);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.3s ease;
+      position: relative;
+      cursor: pointer;
+    }
+    .gallery-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(126, 34, 206, 0.25);
+      border-color: rgba(192, 132, 252, 0.4);
+    }
+    .card-image-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: #1a1025;
+    }
+    .card-image-wrapper img,
+    .card-image-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .gallery-card:hover .card-image-wrapper img,
+    .gallery-card:hover .card-image-wrapper video {
+      transform: scale(1.05);
+    }
+    /* Placeholder */
+    .placeholder-img {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #6b21a8;
+      background: linear-gradient(135deg, #1e1030, #0f0820);
+    }
+    .card-badge {
+      position: absolute;
+      top: 0.8rem;
+      left: 0.8rem;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      color: #fbbf24;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.7rem;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    .card-badge.hot {
+      background: #dc2626;
+      color: white;
+      animation: pulse-badge 1.5s infinite;
+    }
+    @keyframes pulse-badge {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.6); }
+      50% { box-shadow: 0 0 0 12px rgba(220,38,38,0); }
+    }
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      padding: 1.5rem 0.8rem 0.8rem;
+    }
+
+    .card-info {
+      padding: 1rem;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #f1f5f9;
+      margin-bottom: 0.3rem;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.8rem;
+    }
+    .card-stats {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      color: #fbbf24;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ========== BUY BUTTON (YOUR TELEGRAM) ========== */
+    .btn-buy {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.8rem;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+      letter-spacing: 0.5px;
+    }
+    .btn-buy:hover {
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+      transform: scale(1.02);
+    }
+    .btn-buy:active {
+      transform: scale(0.96);
+    }
+    .btn-buy.premium {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      font-size: 1.1rem;
+    }
+    .btn-buy.premium:hover {
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
+    }
+
+    /* ========== NOTIFICATIONS ========== */
+    .notification-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      width: 90%;
+      max-width: 400px;
+      pointer-events: none;
+    }
+    .toast {
+      background: rgba(15, 5, 25, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      border-radius: 2rem;
+      padding: 0.7rem 1.5rem;
+      color: #f1f5f9;
+      font-weight: 600;
+      font-size: 0.85rem;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+      animation: slideUp 0.4s ease, fadeOut 0.5s 3.5s forwards;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+    .toast .name {
+      color: #fbbf24;
+      font-weight: 700;
+    }
+
+    /* ========== FOOTER ========== */
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #64748b;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .card-title {
+        font-size: 0.9rem;
+      }
+      .btn-buy {
+        font-size: 0.85rem;
+        padding: 0.65rem;
+      }
+    }
+    @media (max-width: 380px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar">
+    <div class="logo">✦ PARADISE</div>
+    <div class="nav-links">
+      <span>Gallery</span>
+      <span>Premium</span>
+      <span>Contact</span>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <h1>Exclusive Collection</h1>
+    <p>Premium doors to paradise. Each piece curated for the finest taste.</p>
+    <div class="hero-badge">✦ Limited Access ✦</div>
+  </section>
+
+  <!-- ==================== FILTER TAGS ==================== -->
+  <div class="filter-bar">
+    <span class="filter-tag active">All</span>
+    <span class="filter-tag">Photos</span>
+    <span class="filter-tag">Videos</span>
+    <span class="filter-tag">Premium</span>
+    <span class="filter-tag">Trending</span>
+  </div>
+
+  <!-- ==================== GALLERY GRID ==================== -->
+  <div class="gallery-container">
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Cards will be injected by JavaScript -->
+    </div>
+  </div>
+
+  <!-- ==================== NOTIFICATIONS ==================== -->
+  <div class="notification-container" id="notificationContainer"></div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <div class="footer">
+    <p>© 2025 Paradise Doors · All rights reserved</p>
+    <p style="margin-top:0.3rem;">Contact via Telegram for purchases</p>
+  </div>
+
+  <script>
+    (function() {
+      // ==================== YOUR TELEGRAM LINK ====================
+      const TELEGRAM_USER = "douglasbowman88217";
+
+      // ==================== PRODUCT DATA ====================
+      const products = [
+        {
+          id: 1,
+          name: "cp1-4",
+          desc: "Exclusive portrait set",
+          type: "photo",
+          badge: "",
+          placeholder: "🌸",
+          category: "photo"
+        },
+        {
+          id: 2,
+          name: "all ©🅿",
+          desc: "Complete rare collection",
+          type: "photo",
+          badge: "RARE",
+          placeholder: "🎴",
+          category: "photo"
+        },
+        {
+          id: 3,
+          name: "black ©🅿",
+          desc: "Dark elegance edition",
+          type: "photo",
+          badge: "",
+          placeholder: "🖤",
+          category: "photo"
+        },
+        {
+          id: 4,
+          name: "high school",
+          desc: "Sweet memories collection",
+          type: "photo",
+          badge: "",
+          placeholder: "📚",
+          category: "photo"
+        },
+        {
+          id: 5,
+          name: "amelia",
+          desc: "Soft glow portrait",
+          type: "photo",
+          badge: "NEW",
+          placeholder: "🌙",
+          category: "photo"
+        },
+        {
+          id: 6,
+          name: "💲n🅰pg🅾d",
+          desc: "Gold edition premium",
+          type: "photo",
+          badge: "GOLD",
+          placeholder: "💎",
+          category: "photo"
+        },
+        {
+          id: 7,
+          name: "LIZZY",
+          desc: "Most popular · 370 sold this week",
+          type: "photo",
+          badge: "TRENDING",
+          placeholder: "👑",
+          category: "trending",
+          isPopular: true
+        },
+        {
+          id: 8,
+          name: "mae e filho",
+          desc: "Mom & Son exclusive",
+          type: "photo",
+          badge: "",
+          placeholder: "👩‍👦",
+          category: "photo"
+        },
+        {
+          id: 9,
+          name: "pai e filha",
+          desc: "Dad & Daughter special",
+          type: "photo",
+          badge: "",
+          placeholder: "👨‍👧",
+          category: "photo"
+        },
+        {
+          id: 10,
+          name: "FULL ACCESS [all]",
+          desc: "Everything unlocked · 300+ sold today",
+          type: "pack",
+          badge: "HOT",
+          placeholder: "🌟",
+          category: "premium",
+          isPremium: true
+        }
+      ];
+
+      // ==================== RENDER GALLERY ====================
+      const galleryGrid = document.getElementById('galleryGrid');
+
+      function renderProducts(productList) {
+        galleryGrid.innerHTML = '';
+        productList.forEach(product => {
+          const card = document.createElement('div');
+          card.className = 'gallery-card';
+          card.innerHTML = `
+            <div class="card-image-wrapper">
+              <!-- REPLACE WITH ${product.name} IMAGE -->
+              <!-- Example: <img src="your-images/${product.name.toLowerCase().replace(/[^a-z0-9]/g,'-')}.jpg" alt="${product.name}"> -->
+              <!-- Or for video: <video src="your-videos/${product.name.toLowerCase().replace(/[^a-z0-9]/g,'-')}.mp4" autoplay muted loop playsinline></video> -->
+              <div class="placeholder-img">${product.placeholder}</div>
+              ${product.badge ? `<div class="card-badge${product.isPremium ? ' hot' : ''}">${product.badge}</div>` : ''}
+            </div>
+            <div class="card-info">
+              <div class="card-title">${product.name}</div>
+              <div class="card-desc">${product.desc}</div>
+              ${product.isPopular ? '<div class="card-stats">🔥 370 purchased this week</div>' : ''}
+              ${product.isPremium ? '<div class="card-stats">⚡ 300+ people acquired today</div>' : ''}
+              <button class="btn-buy${product.isPremium ? ' premium' : ''}" onclick="buyProduct('${product.name}', '${product.type}')">
+                💲 Buy Now
+              </button>
+            </div>
+          `;
+          galleryGrid.appendChild(card);
+        });
+      }
+
+      // Initial render
+      renderProducts(products);
+
+      // ==================== FILTER FUNCTIONALITY ====================
+      document.querySelectorAll('.filter-tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+          document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          const filter = this.textContent.toLowerCase();
+          let filtered;
+          if (filter === 'all') {
+            filtered = products;
+          } else if (filter === 'premium') {
+            filtered = products.filter(p => p.isPremium);
+          } else if (filter === 'trending') {
+            filtered = products.filter(p => p.isPopular);
+          } else if (filter === 'photos') {
+            filtered = products.filter(p => p.type === 'photo');
+          } else if (filter === 'videos') {
+            filtered = products.filter(p => p.type === 'video');
+          } else {
+            filtered = products;
+          }
+          renderProducts(filtered);
+        });
+      });
+
+      // ==================== BUY FUNCTION ====================
+      window.buyProduct = function(modelName, type) {
+        let message = "";
+        if (modelName === 'FULL ACCESS [all]') {
+          message = "I want to buy the Full Access Pack";
+        } else {
+          message = `I want to buy ${modelName}'s ${type}`;
+        }
+        
+        const url = `https://t.me/${TELEGRAM_USER}?text=${encodeURIComponent(message)}`;
+        
+        // Show notification
+        showNotification(modelName);
+        
+        // Open Telegram
+        window.open(url, '_blank');
+      };
+
+      // ==================== NOTIFICATIONS ====================
+      function showNotification(modelName) {
+        const container = document.getElementById('notificationContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        const display = modelName === 'FULL ACCESS [all]' ? 'Full Access Pack' : modelName;
+        toast.innerHTML = `🛒 <span class="name">${display}</span> was purchased`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          if (toast.parentNode) toast.remove();
+        }, 4000);
+      }
+
+      // Simulated purchase notifications
+      const names = ["cp1-4", "all ©🅿", "black ©🅿", "high school", "amelia", "💲n🅰pg🅾d", "LIZZY", "mae e filho", "pai e filha", "FULL ACCESS [all]"];
+      
+      function randomNotify() {
+        const name = names[Math.floor(Math.random() * names.length)];
+        showNotification(name);
+        setTimeout(randomNotify, Math.random() * 8000 + 10000);
+      }
+      
+      setTimeout(randomNotify, 8000);
+      setTimeout(() => showNotification("LIZZY"), 5000);
+      setTimeout(() => showNotification("💲n🅰pg🅾d"), 14000);
+      setTimeout(() => showNotification("FULL ACCESS [all]"), 22000);
+
+    })();
+  </script>
+</body>
+</html>
